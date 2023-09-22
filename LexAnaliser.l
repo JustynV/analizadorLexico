@@ -1,7 +1,8 @@
 %{ 
 #include <stdio.h>
-FILE* salida;
+#include <stdlib.h>
 int id = 1;
+char * salida;
 %}
 
 /*Definiciones*/
@@ -62,37 +63,34 @@ DECIMAL ["DECIMAL"]
 VARCHAR ["VARCHAR"]
 %%
 
-{entero} {fprintf(salida, "ENTERO = %s",yytext);};
-{cadena} {fprintf(salida, "CADENA = %s",yytext);};
-{identificador} {
-    fprintf(salida, "id%i = %s",id,yytext);
-    id+=1;
-};
-{decimal} {fprintf(salida, "decimal = %s",yytext);};
-{CREATE} {fprintf(salida, "CREATE");};
-{DROP} {fprintf(salida, "DROP");};
+{entero} {strcat(salida, strcat("ENTERO = ",yytext));};
+{cadena} {strcat(salida, strcat("CADENA = ",yytext));};
+{decimal} {strcat(salida, strcat("decimal = ",yytext));};
+{CREATE} {strcat(salida, "CREATE");};
+{DROP} {strcat(salida, "DROP");};
 
 
-"\n"    {fprintf(salida, "\n\n");};
+"\n"    {strcat(salida, "\n\n");};
 "\t"
 
-.   {fprintf(salida, "ERROR = %s", yytext);};
+.   {strcat(salida, strcat("ERROR = ",yytext));};
 %%
 
 /*Código*/
 
-int main(char *args[]){
-    yyin = fopen(args[1], "r");
+char * main(char *args[]){
+    yyin = fopen(args[0], "r");
     if(yyin == NULL){
-        printf("El archivo no existe");
-        return 1;
+        return "El archivo no existe";
     }
-    else{
-        yylex();
-    }
+    yylex();
     printf("Archivo analizado exitosamente");
     fclose(yyin);
-    fclose(salida);
-    return 0;
-return 0;
+    return salida;
 }
+
+int yywrap() {
+    return 1;
+}
+
+
