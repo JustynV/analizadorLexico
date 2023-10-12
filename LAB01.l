@@ -3,22 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "y.tab.h"
 
-int identificador_count = 0; // Para contar identificadores
-int error_count = 0; // Para contar errores léxicos
-int saltos_count = 0;
-
-#define MAX_IDENTIFIERS 100 // Tamaño máximo del arreglo de nombres de identificadores
-char* identifier_names[MAX_IDENTIFIERS]; // Arreglo para almacenar los nombres de los identificadores únicos
-
-// Estructura para almacenar información sobre errores léxicos
-struct LexicalError {
-    char* lexeme; // Lexema que causó el error
-    int line;     // Número de línea donde ocurrió el error
-};
-
-struct LexicalError lexical_errors[MAX_IDENTIFIERS]; // Arreglo para almacenar errores léxicos
-
+int saltos_count = 1;
+int error_count = 0;
 %}
 
 %option case-insensitive 
@@ -26,85 +14,50 @@ struct LexicalError lexical_errors[MAX_IDENTIFIERS]; // Arreglo para almacenar e
 
 %%
 
-"CREATE TABLE"      { printf("CREATE TABLE "); }
-"CREATE"            { printf("CREATE  "); }
-"DROP TABLE"        { printf("DROP TABLE "); }
-"VARCHAR"           { printf("VARCHAR "); }
-"INTEGER"           { printf("INTEGER "); }
-"DROP"              { printf("DROP "); }
-"INSERT INTO"            { printf("INSERT INTO"); }
-"DELETE"            { printf("DELETE "); }
-"UPDATE"            { printf("UPDATE "); }
-"SELECT"            { printf("SELECT "); }
-"FROM"              { printf("FROM "); }
-"WHERE"             { printf("WHERE "); }
-"AND"               { printf("AND "); }
-"OR"                { printf("OR "); }
-"SET"               { printf("SET "); }
-"VALUES"            { printf("VALUES "); }
-"GROUP BY"          { printf("GROUP BY "); }
-"ORDER BY"          { printf("ORDER BY "); }
-"ASC"               { printf("ASC "); }
-"DESC"              { printf("DESC "); }
-"MAX"               { printf("MAX "); }
-"MIN"               { printf("MIN "); }
-"AVG"               { printf("AVG "); }
-"COUNT"             { printf("COUNT "); }
-"DECIMAL"           { printf("DECIMAL "); }
+"CREATE"            {yylval.reserved = yytext(); return(CREATE);}
+"DROP"              {yylval.reserved = yytext(); return(DROP);}
+"TABLE"             {yylval.reserved = yytext(); return(TABLE);}
+"INSERT INTO"       {yylval.reserved = yytext(); return(INSERT);}
+"DELETE"            {yylval.reserved = yytext(); return(DELETE);}
+"UPDATE"            {yylval.reserved = yytext(); return(UPDATE);}
+"SELECT"            {yylval.reserved = yytext(); return(SELECT);}
+"FROM"              {yylval.reserved = yytext(); return(FROM);}
+"WHERE"             {yylval.reserved = yytext(); return(WHERE);}
+"VALUES"            {yylval.reserved = yytext(); return(VALUES);}
+"SET"               {yylval.reserved = yytext(); return(SET);}
 
-[a-zA-ZáéíóúÁÉÍÓÚÑüÜ][a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]* {
-    char* name = yytext;
-    int duplicate = 0;
-    for (int i = 0; i < identificador_count; i++) {
-        // Convertir ambas cadenas a minúsculas antes de comparar
-        char* lowercase_name = strdup(name);
-        for (int j = 0; lowercase_name[j]; j++) {
-            lowercase_name[j] = tolower(lowercase_name[j]);
-        }
-        char* lowercase_existing_name = strdup(identifier_names[i]);
-        for (int j = 0; lowercase_existing_name[j]; j++) {
-            lowercase_existing_name[j] = tolower(lowercase_existing_name[j]);
-        }
+" "                 {yylval.reserved = yytext(); return(ESP);}
 
-        if (strcmp(lowercase_existing_name, lowercase_name) == 0) {
-            duplicate = 1;
-            free(lowercase_name);
-            free(lowercase_existing_name);
-            break;
-        }
-        free(lowercase_name);
-        free(lowercase_existing_name);
+"MAX"               {yylval.reserved = yytext(); return(MAX);}
+"MIN"               {yylval.reserved = yytext(); return(MIN);}
+"AVG"               {yylval.reserved = yytext(); return(AVG);}
+"COUNT"             {yylval.reserved = yytext(); return(COUNT);}
+
+
+"VARCHAR"           {yylval.reserved = yytext(); return(VARCHAR);}
+"INTEGER"           {yylval.reserved = yytext(); return(INTEGER);}
+"DECIMAL"           {yylval.reserved = yytext(); return(DECIMAL);}
+
+
+
+[a-zA-ZáéíóúÁÉÍÓÚÑüÜ][a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]* {yylval.reserved = yytext(); return(ID);}
+[0-9]+              {yylval.number = atoi(yytext()); return(ENTERO); }
+[0-9]+\.[0-9]+      {yylval.number = atoi(yytext()); return(FLOAT); }
+\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {yylval.reserved = yytext(); return(CADENA);}
+\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {yylval.reserved = yytext(); return(CADENA);}
+
+
+[=()<>*;,'"] { return *yytext; }
+
+[ \n]+      {saltos_count++;} // Contar saltos de línea para saber la línea actual
+[ \t\r]+      {}; // Ignorar espacios en blanco
+['.']+      { 
+    
+    if(error_count == 0){
+        printf("Incorrecto\n\n");
+        error_count++;
     }
-
-    if (!duplicate) {
-        printf("ID%d=%s ", ++identificador_count, name);
-        if (identificador_count <= MAX_IDENTIFIERS) {
-            identifier_names[identificador_count - 1] = strdup(name);
-        } else {
-            printf("Error: Se ha alcanzado el límite máximo de identificadores.\n");
-            exit(1);
-        }
-    }
-}
-[0-9]+              { printf("ENTERO: %s ", yytext); }
-[0-9]+\.[0-9]+      { printf("DECIMAL: %s ", yytext); }
-[0-9]+[a-zA-ZáéíóúÁÉÍÓÚÑüÜ0-9]+        { printf("ERROR: %s ", yytext);error_count++; }
-\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {printf("cadena: %s ", yytext);}
-\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {printf("cadena: %s ", yytext);}
-[+]		    { printf("suma=%s ", yytext); }
-[-]       { printf("resta=%s ", yytext); }
-[*]		    { printf("asterisco=%s ", yytext); }
-[/]		    { printf("div=%s ", yytext); }
-[=]		    { printf("asign= %s ", yytext); }
-[<]		    { printf("menorque=%s ", yytext); }
-[>]		    { printf("mayorque=%s ", yytext); }
-[,]		    { printf("coma=%s ", yytext); }
-[;]		    { printf("puntocoma=%s ", yytext); }
-[(]		    { printf("parar=%s ", yytext); }
-[)]       { printf("parcier=%s ", yytext); }
-[ \n]+     { printf("%s", yytext);}           // Ignorar saltos de línea
-[ \t]+               ; // Ignorar espacios en blanco
-['.']+                   { printf("ERROR=%s ", yytext);error_count++; }
+    printf("Error en la línea %s\n", saltos_count);return (OTHER); }
 
 
 
@@ -128,17 +81,10 @@ int main(int argc, char* argv[]) {
     while (yylex() != 0) {}
 
     fclose(archivo);
-
-    // Imprimir la cantidad de identificadores y sus nombres
-    printf("\nCantidad de identificadores encontrados: %d\n", identificador_count);
-    for (int i = 0; i < identificador_count; i++) {
-        printf("ID%d: %s\n", i + 1, identifier_names[i]);
-        free(identifier_names[i]); // Liberar la memoria asignada
+    
+    if{error_count == 0}{
+        printf("Correcto");
     }
-
-    
-    printf("\nCantidad de errores léxicos encontrados: %d\n", error_count);
-    
 
   return 0;
 }
