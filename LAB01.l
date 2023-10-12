@@ -1,9 +1,6 @@
 %{
 #include <stdio.h>
 #include "y.tab.h"
-
-int saltos_count = 1;
-int error_count = 0;
 %}
 
 %option case-insensitive 
@@ -42,49 +39,13 @@ int error_count = 0;
 [a-zA-ZáéíóúÁÉÍÓÚÑüÜ][a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]* {yylval.reserved = yytext; return(ID);}
 [0-9]+              {yylval.number = atoi(yytext); return(ENTERO); }
 [0-9]+\.[0-9]+      {yylval.number = atoi(yytext); return(FLOAT); }
-\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {yylval.id = yytext; return(CADENA);}
-\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {yylval.id = yytext; return(CADENA);}
+\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {yylval.reserved = yytext; return(CADENA);}
+\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {yylval.reserved = yytext; return(CADENA);}
 
 
 [=()<>*;,'"] { return *yytext; }
 
-[ \n]+      {saltos_count++;} // Contar saltos de línea para saber la línea actual
-[ \t\r]+      {}; // Ignorar espacios en blanco
-['.']+      { 
-    
-    if(error_count == 0){
-        printf("Incorrecto\n\n");
-        error_count++;
-    }
-    printf("Error en la línea %i\n", saltos_count);return (OTHER); 
-    }
-
-
-
-
+[ \n]+      {} 
+[ \t\r]+    {}
+['.']+      {fprintf(stderr, "Error sintáctico en la línea %d: Carácter inesperado: %s\n", yylineno, yytext);}
 %%
-
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        printf("Uso: %s archivo_de_entrada\n", argv[0]);
-        return 1;
-    }
-
-    FILE* archivo = fopen(argv[1], "r");
-    if (archivo == NULL) {
-        printf("No se pudo abrir el archivo %s\n", argv[1]);
-        return 1;
-    }
-
-    yyin = archivo;
-
-    while (yylex() != 0) {}
-
-    fclose(archivo);
-    
-    if(error_count == 0){
-        printf("Correcto");
-    }
-
-  return 0;
-}

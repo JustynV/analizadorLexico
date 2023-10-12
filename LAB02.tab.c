@@ -75,7 +75,7 @@ int yylex();
 void yyerror(const char *s);
 
 
-#line 79 "y.tab.c"
+#line 79 "LAB02.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -98,126 +98,7 @@ void yyerror(const char *s);
 #  endif
 # endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-
-/* Token kinds.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    CREATE = 258,                  /* CREATE  */
-    DROP = 259,                    /* DROP  */
-    TABLE = 260,                   /* TABLE  */
-    INSERT = 261,                  /* INSERT  */
-    DELETE = 262,                  /* DELETE  */
-    UPDATE = 263,                  /* UPDATE  */
-    ENTERO = 264,                  /* ENTERO  */
-    FLOAT = 265,                   /* FLOAT  */
-    CADENA = 266,                  /* CADENA  */
-    ID = 267,                      /* ID  */
-    ESP = 268,                     /* ESP  */
-    OTHER = 269,                   /* OTHER  */
-    VARCHAR = 270,                 /* VARCHAR  */
-    DECIMAL = 271,                 /* DECIMAL  */
-    INTEGER = 272,                 /* INTEGER  */
-    SELECT = 273,                  /* SELECT  */
-    WHERE = 274,                   /* WHERE  */
-    GROUP = 275,                   /* GROUP  */
-    ORDER = 276,                   /* ORDER  */
-    BY = 277,                      /* BY  */
-    OR = 278,                      /* OR  */
-    AND = 279,                     /* AND  */
-    INTO = 280,                    /* INTO  */
-    VALUES = 281,                  /* VALUES  */
-    SET = 282,                     /* SET  */
-    FROM = 283,                    /* FROM  */
-    ASC = 284,                     /* ASC  */
-    DESC = 285,                    /* DESC  */
-    MAX = 286,                     /* MAX  */
-    MIN = 287,                     /* MIN  */
-    AVG = 288,                     /* AVG  */
-    COUNT = 289                    /* COUNT  */
-  };
-  typedef enum yytokentype yytoken_kind_t;
-#endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define CREATE 258
-#define DROP 259
-#define TABLE 260
-#define INSERT 261
-#define DELETE 262
-#define UPDATE 263
-#define ENTERO 264
-#define FLOAT 265
-#define CADENA 266
-#define ID 267
-#define ESP 268
-#define OTHER 269
-#define VARCHAR 270
-#define DECIMAL 271
-#define INTEGER 272
-#define SELECT 273
-#define WHERE 274
-#define GROUP 275
-#define ORDER 276
-#define BY 277
-#define OR 278
-#define AND 279
-#define INTO 280
-#define VALUES 281
-#define SET 282
-#define FROM 283
-#define ASC 284
-#define DESC 285
-#define MAX 286
-#define MIN 287
-#define AVG 288
-#define COUNT 289
-
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 24 "LAB02.y"
-
-int number;
-char id;
-char *reserved;
-
-#line 206 "y.tab.c"
-
-};
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
-
-
-extern YYSTYPE yylval;
-
-
-int yyparse (void);
-
-
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#include "LAB02.tab.h"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -1349,83 +1230,83 @@ yyreduce:
   case 5: /* LINE: error ';'  */
 #line 38 "LAB02.y"
                { yyerrok; }
-#line 1353 "y.tab.c"
+#line 1234 "LAB02.tab.c"
     break;
 
   case 7: /* CRUD: CREATE ESP TABLE ESP ID '(' ARGS ')'  */
 #line 40 "LAB02.y"
                                            {printf("CREATE VALIDO");}
-#line 1359 "y.tab.c"
+#line 1240 "LAB02.tab.c"
     break;
 
   case 8: /* CRUD: DROP ESP TABLE ESP ID  */
 #line 41 "LAB02.y"
                             {printf("DROP VALIDO");}
-#line 1365 "y.tab.c"
+#line 1246 "LAB02.tab.c"
     break;
 
   case 9: /* CRUD: INSERT ESP INTO ESP ID ESP VALUES '(' VALS ')'  */
 #line 42 "LAB02.y"
                                                    {printf("INSERT VALIDO");}
-#line 1371 "y.tab.c"
+#line 1252 "LAB02.tab.c"
     break;
 
   case 10: /* CRUD: DELETE ESP FROM ESP ID WHERE ESP CONDITIONS  */
 #line 43 "LAB02.y"
                                                   {printf("DELETE VALIDO");}
-#line 1377 "y.tab.c"
+#line 1258 "LAB02.tab.c"
     break;
 
   case 11: /* CRUD: UPDATE ESP ID ESP SET ESP ID '=' VAL ESP WHERE CONDITIONS  */
 #line 44 "LAB02.y"
                                                                 {printf("UPDATE VALIDO");}
-#line 1383 "y.tab.c"
+#line 1264 "LAB02.tab.c"
     break;
 
   case 12: /* CRUD: SELECT ESP IDS ESP FROM ESP ID  */
 #line 45 "LAB02.y"
                                      {printf("SELECT VALIDO");}
-#line 1389 "y.tab.c"
+#line 1270 "LAB02.tab.c"
     break;
 
   case 13: /* CRUD: SELECT ESP FUNCTION ESP FROM ESP ID  */
 #line 46 "LAB02.y"
                                           {printf("SELECT VALIDO");}
-#line 1395 "y.tab.c"
+#line 1276 "LAB02.tab.c"
     break;
 
   case 14: /* CRUD: SELECT ESP SELECTIONS FROM ESP ID  */
 #line 47 "LAB02.y"
                                         {printf("SELECT VALIDO");}
-#line 1401 "y.tab.c"
+#line 1282 "LAB02.tab.c"
     break;
 
   case 15: /* CRUD: SELECT ESP IDS ESP FROM ESP ID ESP WHERE ESP CONDITIONS  */
 #line 48 "LAB02.y"
                                                               {printf("SELECT VALIDO");}
-#line 1407 "y.tab.c"
+#line 1288 "LAB02.tab.c"
     break;
 
   case 16: /* CRUD: SELECT ESP IDS ESP FROM ESP ID ESP GROUP ESP BY ESP ID  */
 #line 49 "LAB02.y"
                                                              {printf("SELECT VALIDO");}
-#line 1413 "y.tab.c"
+#line 1294 "LAB02.tab.c"
     break;
 
   case 17: /* CRUD: SELECT ESP IDS ESP FROM ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS  */
 #line 50 "LAB02.y"
                                                                          {printf("SELECT VALIDO");}
-#line 1419 "y.tab.c"
+#line 1300 "LAB02.tab.c"
     break;
 
   case 18: /* CRUD: SELECT ESP IDS FROM ESP ID ESP WHERE ESP CONDITIONS ESP GROUP ESP BY ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS  */
 #line 51 "LAB02.y"
                                                                                                                       {printf("SELECT VALIDO");}
-#line 1425 "y.tab.c"
+#line 1306 "LAB02.tab.c"
     break;
 
 
-#line 1429 "y.tab.c"
+#line 1310 "LAB02.tab.c"
 
       default: break;
     }
@@ -1622,7 +1503,7 @@ yyreturnlab:
 
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Error sintáctico en la línea %d: %s\n", yylineno, s);
+    fprintf(stderr, "Error sintáctico en la línea: %s\n", s);
 }
 
 int main(){

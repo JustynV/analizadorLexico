@@ -1,2 +1,0 @@
-CREATE Table Empleado(nombre VARCHAR(20), cedula INTEGER, salario DECIMAL(2));
-INSERT INTO Empleado VALUES('Juan',10.5, 12);

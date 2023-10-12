@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_LAB02_TAB_H_INCLUDED
+# define YY_YY_LAB02_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -89,43 +89,6 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define CREATE 258
-#define DROP 259
-#define TABLE 260
-#define INSERT 261
-#define DELETE 262
-#define UPDATE 263
-#define ENTERO 264
-#define FLOAT 265
-#define CADENA 266
-#define ID 267
-#define ESP 268
-#define OTHER 269
-#define VARCHAR 270
-#define DECIMAL 271
-#define INTEGER 272
-#define SELECT 273
-#define WHERE 274
-#define GROUP 275
-#define ORDER 276
-#define BY 277
-#define OR 278
-#define AND 279
-#define INTO 280
-#define VALUES 281
-#define SET 282
-#define FROM 283
-#define ASC 284
-#define DESC 285
-#define MAX 286
-#define MIN 287
-#define AVG 288
-#define COUNT 289
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -137,7 +100,7 @@ int number;
 char id;
 char *reserved;
 
-#line 141 "y.tab.h"
+#line 104 "LAB02.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -152,4 +115,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_LAB02_TAB_H_INCLUDED  */
