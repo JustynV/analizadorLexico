@@ -1,10 +1,9 @@
 %{
 #include <stdio.h>
-#include <stdlib.h>
 int yylex();
 int yyeror(char *s);
 %}
-
+ 
 %token CREATE DROP TABLE
 
 %token INSERT DELETE UPDATE
@@ -13,7 +12,7 @@ int yyeror(char *s);
 
 %token VARCHAR DECIMAL INTEGER
 
-%token SELECT WHERE GROUP ORDER BY 
+%token SELECT WHERE GROUP ORDER BY OR AND
 
 %token INTO VALUES SET FROM ASC DESC
 
@@ -21,7 +20,7 @@ int yyeror(char *s);
 
 
 %union{
-int num;
+int number;
 char id;
 char *reserved;
 }
@@ -33,44 +32,43 @@ CODE:
 ;
 
 LINE:
-    |CRUD ";" LINE
+    |CRUD ';' LINE
 
 CRUD:|CREATE ESP TABLE ESP ID '(' ARGS ')' {}
      |DROP ESP TABLE ESP ID {}
-     |INSERT ESP INTO ESP ID ESP VALUES '('ARGS')'
-     |DELETE ESP FROM ESP ID WHERE CONDITIONS{}
-     |UPDATE ESP ID ESP SET ESP ID "=" (ID|ENTERO|FLOAT) {}
-     |SELECT
-     |SELECT
-     |SELECT
-     |SELECT
-     |SELECT
-     |SELECT
-     |SELECT
+     |INSERT ESP INTO ESP ID ESP VALUES '('VALS')'
+     |DELETE ESP FROM ESP ID WHERE ESP CONDITIONS{}
+     |UPDATE ESP ID ESP SET ESP ID '=' VAL ESP WHERE CONDITIONS {}
+     |SELECT ESP IDS ESP FROM ESP ID
+     |SELECT ESP FUNCTION ESP FROM ESP ID
+     |SELECT ESP SELECTIONS FROM ESP ID
+     |SELECT ESP IDS ESP FROM ESP ID ESP WHERE ESP CONDITIONS
+     |SELECT ESP IDS ESP FROM ESP ID ESP GROUP ESP BY ESP ID
+     |SELECT ESP IDS ESP FROM ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS
+     |SELECT ESP IDS FROM ESP ID ESP WHERE ESP CONDITIONS ESP GROUP ESP BY ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS
 
+ORDERS:ASC
+      |DESC
 
-CONDITIONS:CONDITION
-           |CONDITION AND CONDITIONS
-           |CONDITION OR CONDITIONS
+SELECTION:FUNCTION
+         |ID
 
-CONDITION: ID '=' CADENA
-          |ID '<>' CADENA
-          |ID '=' ENTERO
-          |ID '<>' ENTERO
-          |ID '>' ENTERO
-          |ID '<' ENTERO
-          |ID '>=' ENTERO
-          |ID '<=' ENTERO
-          |ID '=' DECIMAL
-          |ID '<>' DECIMAL
-          |ID '>' DECIMAL
-          |ID '<' DECIMAL
-          |ID '>=' DECIMAL
-          |ID '<=' DECIMAL
+SELECTIONS:SELECTION
+          |SELECTION ',' SELECTIONS
 
+VAL: CADENA
+    |ENTERO
+    |FLOAT
+
+VALS:VAL
+    |VAL ','VALS
+
+IDS:ID
+   |ID ',' IDS
+   |'*'
 
 ARGS: ARG
-     |ARG ', ' ARGS
+     |ARG ',' ARGS
 
 ARG: ID ESP VARCHAR '('ENTERO')'
     |ID ESP VARCHAR
@@ -78,14 +76,39 @@ ARG: ID ESP VARCHAR '('ENTERO')'
     |ID ESP DECIMAL
     |ID ESP DECIMAL '('ENTERO')'
 
+FUNCTION:MAX '('ID')'
+        |MIN '('ID')'
+        |AVG '('ID')'
+        |COUNT '('ID')'
+
+FUNCTIONS:FUNCTION
+         |FUNCTION ',' FUNCTIONS
+
+
+CONDITIONS:CONDITION
+           |CONDITION ESP AND ESP CONDITIONS
+           |CONDITION ESP OR ESP CONDITIONS
+
+CONDITION: ID '=' CADENA
+          |ID '<''>' CADENA
+          |ID '=' ENTERO
+          |ID '<''>'  ENTERO
+          |ID '>' ENTERO
+          |ID '<' ENTERO
+          |ID '>''=' ENTERO
+          |ID '<''=' ENTERO
+          |ID '=' DECIMAL
+          |ID '<''>'  DECIMAL
+          |ID '>' DECIMAL
+          |ID '<' DECIMAL
+          |ID '>''=' DECIMAL
+          |ID '<''=' DECIMAL
+
+
+
+
 %%
 
-int yyeror(char *s){
-    printf("Error en la linea $s\n",s);
-}
-
-
-int manin(int argc, char **argv){
-    yyparse();
-    return 0;
+int yyerror(char *s){
+    printf("Error en la linea %s\n",s);
 }
