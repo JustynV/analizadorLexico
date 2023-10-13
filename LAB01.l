@@ -1,10 +1,13 @@
 %{
 #include <stdio.h>
-#include "y.tab.h"
+#include "LAB02.tab.h"
+void showError();
+char *error_token = NULL;
 %}
 
 %option case-insensitive 
 %option noyywrap
+%option yylineno 
 
 %%
 
@@ -26,8 +29,8 @@
 "MIN"               {yylval.reserved = yytext; return(MIN);}
 "AVG"               {yylval.reserved = yytext; return(AVG);}
 "COUNT"             {yylval.reserved = yytext; return(COUNT);}
-"AND"             {yylval.reserved = yytext; return(AND);}
-"OR"             {yylval.reserved = yytext; return(OR);}
+"AND"               {yylval.reserved = yytext; return(AND);}
+"OR"                {yylval.reserved = yytext; return(OR);}
 
 
 "VARCHAR"           {yylval.reserved = yytext; return(VARCHAR);}
@@ -45,7 +48,11 @@
 
 [=()<>*;,'"] { return *yytext; }
 
-[ \n]+      {} 
+[\n]+      {yylineno++;} 
 [ \t\r]+    {}
-['.']+      {fprintf(stderr, "Error sintáctico en la línea %d: Carácter inesperado: %s\n", yylineno, yytext);}
+['.']+      {showError(); return OTHER;}
 %%
+
+void showError(char *c){
+    printf("Error léxico %s en la linea %i", c, yylineno);
+}

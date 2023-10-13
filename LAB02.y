@@ -1,9 +1,8 @@
 %{
 #include <stdio.h>
-#include <string.h>
 int yylex();
-void yyerror(const char *s);
-
+int yyerror(char *s);
+extern int yylineno;
 %}
  
 %token CREATE DROP TABLE
@@ -35,43 +34,37 @@ CODE:
 
 LINE:
     |CRUD ';' LINE
-    |error ';' { yyerrok; }
 
-CRUD:|CREATE ESP TABLE ESP ID '(' ARGS ')' {printf("CREATE VALIDO");}
-     |DROP ESP TABLE ESP ID {printf("DROP VALIDO");}
-     |INSERT ESP INTO ESP ID ESP VALUES '('VALS')' {printf("INSERT VALIDO");}
-     |DELETE ESP FROM ESP ID WHERE ESP CONDITIONS {printf("DELETE VALIDO");}
-     |UPDATE ESP ID ESP SET ESP ID '=' VAL ESP WHERE CONDITIONS {printf("UPDATE VALIDO");}
-     |SELECT ESP IDS ESP FROM ESP ID {printf("SELECT VALIDO");}
-     |SELECT ESP FUNCTION ESP FROM ESP ID {printf("SELECT VALIDO");}
-     |SELECT ESP SELECTIONS FROM ESP ID {printf("SELECT VALIDO");}
-     |SELECT ESP IDS ESP FROM ESP ID ESP WHERE ESP CONDITIONS {printf("SELECT VALIDO");}
-     |SELECT ESP IDS ESP FROM ESP ID ESP GROUP ESP BY ESP ID {printf("SELECT VALIDO");}
-     |SELECT ESP IDS ESP FROM ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS {printf("SELECT VALIDO");}
+CRUD:
+     |CREATE ESP TABLE ESP ID '(' ARGS ')' 
+     |DROP ESP TABLE ESP ID 
+     |INSERT ESP INTO ESP ID ESP VALUES '('VALS')'
+     |DELETE ESP FROM ESP ID WHERE ESP CONDITIONS 
+     |UPDATE ESP ID ESP SET ESP ID '=' VAL ESP WHERE CONDITIONS 
+     |SELECT ESP IDS ESP FROM ESP ID 
+     |SELECT ESP FUNCTION ESP FROM ESP ID
+     |SELECT ESP IDS ESP FROM ESP ID ESP WHERE ESP CONDITIONS 
+     |SELECT ESP IDS ESP FROM ESP ID ESP GROUP ESP BY ESP ID 
+     |SELECT ESP IDS ESP FROM ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS 
      |SELECT ESP IDS FROM ESP ID ESP WHERE ESP CONDITIONS ESP GROUP ESP BY ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS {printf("SELECT VALIDO");}
+     |error_state
 
 ORDERS:ASC
       |DESC
-
-SELECTION:FUNCTION
-         |ID
-
-SELECTIONS:SELECTION
-          |SELECTION ',' SELECTIONS
 
 VAL: CADENA
     |ENTERO
     |FLOAT
 
 VALS:VAL
-    |VAL ','VALS
+    |VAL ',' VALS
 
-IDS:ID
-   |ID ',' IDS
-   |'*'
+IDS: ID
+    |ID ',' IDS
+    |'*'
 
 ARGS: ARG
-     |ARG ',' ARGS
+     |ARG ',' ESP ARGS
 
 ARG: ID ESP VARCHAR '('ENTERO')'
     |ID ESP VARCHAR
@@ -85,8 +78,8 @@ FUNCTION:MAX '('ID')'
         |COUNT '('ID')'
 
 CONDITIONS:CONDITION
-           |CONDITION ESP AND ESP CONDITIONS
-           |CONDITION ESP OR ESP CONDITIONS
+           |AND CONDITION ESP CONDITIONS
+           |OR CONDITION ESP CONDITIONS
 
 CONDITION: ID '=' CADENA
           |ID '<''>' CADENA
@@ -103,10 +96,12 @@ CONDITION: ID '=' CADENA
           |ID '>''=' DECIMAL
           |ID '<''=' DECIMAL
 
+error_state: error{}
+
 %%
 
-void yyerror(const char *s) {
-    fprintf(stderr, "Error sintáctico en la línea: %s\n", s);
+int yyerror(char *s) {
+    printf("Error en la línea %d\n", yylineno);
 }
 
 int main(){
