@@ -28,8 +28,6 @@
 %token END
 %start CODE
 
-%define parse.error verbose
-
 %%
 
 CODE:
@@ -127,7 +125,6 @@ void yyerror (char *s) {
         printf("Incorrecto\n\n");
         correct = 1;
     };
-    printf("%s \n", s);
 } 
 
 int main(int argc, char **argv){
