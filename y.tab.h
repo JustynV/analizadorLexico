@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_LAB02_TAB_H_INCLUDED
-# define YY_YY_LAB02_TAB_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -64,46 +64,70 @@ extern int yydebug;
     FLOAT = 265,                   /* FLOAT  */
     CADENA = 266,                  /* CADENA  */
     ID = 267,                      /* ID  */
-    ESP = 268,                     /* ESP  */
-    OTHER = 269,                   /* OTHER  */
-    VARCHAR = 270,                 /* VARCHAR  */
-    DECIMAL = 271,                 /* DECIMAL  */
-    INTEGER = 272,                 /* INTEGER  */
-    SELECT = 273,                  /* SELECT  */
-    WHERE = 274,                   /* WHERE  */
-    GROUP = 275,                   /* GROUP  */
-    ORDER = 276,                   /* ORDER  */
-    BY = 277,                      /* BY  */
-    OR = 278,                      /* OR  */
-    AND = 279,                     /* AND  */
-    INTO = 280,                    /* INTO  */
-    VALUES = 281,                  /* VALUES  */
-    SET = 282,                     /* SET  */
-    FROM = 283,                    /* FROM  */
-    ASC = 284,                     /* ASC  */
-    DESC = 285,                    /* DESC  */
-    MAX = 286,                     /* MAX  */
-    MIN = 287,                     /* MIN  */
-    AVG = 288,                     /* AVG  */
-    COUNT = 289                    /* COUNT  */
+    OTHER = 268,                   /* OTHER  */
+    VARCHAR = 269,                 /* VARCHAR  */
+    DECIMAL = 270,                 /* DECIMAL  */
+    INTEGER = 271,                 /* INTEGER  */
+    SELECT = 272,                  /* SELECT  */
+    WHERE = 273,                   /* WHERE  */
+    GROUPBY = 274,                 /* GROUPBY  */
+    ORDERBY = 275,                 /* ORDERBY  */
+    OR = 276,                      /* OR  */
+    AND = 277,                     /* AND  */
+    INTO = 278,                    /* INTO  */
+    VALUES = 279,                  /* VALUES  */
+    SET = 280,                     /* SET  */
+    FROM = 281,                    /* FROM  */
+    ASC = 282,                     /* ASC  */
+    DESC = 283,                    /* DESC  */
+    MAX = 284,                     /* MAX  */
+    MIN = 285,                     /* MIN  */
+    AVG = 286,                     /* AVG  */
+    COUNT = 287,                   /* COUNT  */
+    END = 288                      /* END  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
+#define CREATE 258
+#define DROP 259
+#define TABLE 260
+#define INSERT 261
+#define DELETE 262
+#define UPDATE 263
+#define ENTERO 264
+#define FLOAT 265
+#define CADENA 266
+#define ID 267
+#define OTHER 268
+#define VARCHAR 269
+#define DECIMAL 270
+#define INTEGER 271
+#define SELECT 272
+#define WHERE 273
+#define GROUPBY 274
+#define ORDERBY 275
+#define OR 276
+#define AND 277
+#define INTO 278
+#define VALUES 279
+#define SET 280
+#define FROM 281
+#define ASC 282
+#define DESC 283
+#define MAX 284
+#define MIN 285
+#define AVG 286
+#define COUNT 287
+#define END 288
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 23 "LAB02.y"
-
-int number;
-char id;
-char *reserved;
-
-#line 104 "LAB02.tab.h"
-
-};
-typedef union YYSTYPE YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -115,4 +139,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_LAB02_TAB_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

@@ -5,85 +5,103 @@
     int yylex();
     extern int yylineno;
     void yyerror (char *s);
-    void showError (char *s);
-    bool correct = true;
+    void showError ();
+    int correct = 0;
 %}
  
 
- %define parse.error verbose
 
 %token CREATE DROP TABLE
 
 %token INSERT DELETE UPDATE
 
-%token ENTERO FLOAT CADENA ID ESP OTHER
+%token ENTERO FLOAT CADENA ID OTHER
 
 %token VARCHAR DECIMAL INTEGER
 
-%token SELECT WHERE GROUP ORDER BY OR AND
+%token SELECT WHERE GROUPBY ORDERBY OR AND
 
 %token INTO VALUES SET FROM ASC DESC
 
 %token MAX MIN AVG COUNT
 
+%token END
 %start CODE
+
+%define parse.error verbose
 
 %%
 
 CODE:
-    LINE
-;
-
-LINE:
-    |CRUD ';' LINE
+    CODE CRUD
+    |CRUD ;
 
 CRUD:
-     |CREATE ESP TABLE ESP ID '(' ARGS ')' 
-     |DROP ESP TABLE ESP ID 
-     |INSERT ESP INTO ESP ID ESP VALUES '('VALS')'
-     |DELETE ESP FROM ESP ID WHERE ESP CONDITIONS 
-     |UPDATE ESP ID ESP SET ESP ID '=' VAL ESP WHERE CONDITIONS 
-     |SELECT ESP IDS ESP FROM ESP ID 
-     |SELECT ESP FUNCTION ESP FROM ESP ID
-     |SELECT ESP IDS ESP FROM ESP ID ESP WHERE ESP CONDITIONS 
-     |SELECT ESP IDS ESP FROM ESP ID ESP GROUP ESP BY ESP ID 
-     |SELECT ESP IDS ESP FROM ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS 
-     |SELECT ESP IDS FROM ESP ID ESP WHERE ESP CONDITIONS ESP GROUP ESP BY ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS {printf("SELECT VALIDO");}
-     |error_state ';' {showError();}
+     CREATE TABLE ID '(' ARGS ')' END
+     |DROP TABLE ID END
+     |INSERT INTO ID VALUES '('VALS')'END
+     |DELETE FROM ID WHERE CONDITIONS END
+     |UPDATE ID  SET ID '=' VAL WHERE CONDITIONS END
+
+     |SELECT MIX FROM ID GROUPING END
+     |SELECT MIX FROM ID WHERE CONDITIONS GROUPING END
+     |error END {showError();}
+     ;
 
 ORDERS:ASC
       |DESC
+      ;
+
+
+
+GROUPING: GROUPBY ID 
+    |ORDERBY IDS ORDERS 
+    |GROUPBY ID ORDERBY IDS ORDERS 
+    |ORDERBY IDS ORDERS GROUPBY ID
+    |
 
 VAL: CADENA
     |ENTERO
     |FLOAT
+    ;
 
 VALS:VAL
     |VAL ',' VALS
+    ;
 
 IDS: ID
     |ID ',' IDS
     |'*'
+    ;
 
 ARGS: ARG
-     |ARG ',' ESP ARGS
+     |ARG ','  ARGS
+     ;
 
-ARG: ID ESP VARCHAR '('ENTERO')'
-    |ID ESP VARCHAR
-    |ID ESP INTEGER
-    |ID ESP DECIMAL
-    |ID ESP DECIMAL '('ENTERO')'
+ARG: ID  VARCHAR '('ENTERO')'
+    |ID  VARCHAR
+    |ID  INTEGER
+    |ID  DECIMAL
+    |ID  DECIMAL '('ENTERO')'
+    ;
 
 FUNCTION:MAX '('ID')'
         |MIN '('ID')'
         |AVG '('ID')'
         |COUNT '('ID')'
+        ;
+
+MIX: FUNCTION ',' MIX
+    |IDS ',' MIX
+    |IDS
+    |FUNCTION
 
 CONDITIONS:CONDITION
-           |AND CONDITION ESP CONDITIONS
-           |OR CONDITION ESP CONDITIONS
+           |AND CONDITION  CONDITIONS
+           |OR CONDITION  CONDITIONS
+           ;
 
-CONDITION: ID '=' CADENA
+CONDITION: ID '=''=' CADENA
           |ID '<''>' CADENA
           |ID '=' ENTERO
           |ID '<''>'  ENTERO
@@ -91,13 +109,13 @@ CONDITION: ID '=' CADENA
           |ID '<' ENTERO
           |ID '>''=' ENTERO
           |ID '<''=' ENTERO
-          |ID '=' DECIMAL
-          |ID '<''>'  DECIMAL
-          |ID '>' DECIMAL
-          |ID '<' DECIMAL
-          |ID '>''=' DECIMAL
-          |ID '<''=' DECIMAL
-
+          |ID '=''='  FLOAT
+          |ID '<''>'  FLOAT
+          |ID '>' FLOAT
+          |ID '<' FLOAT
+          |ID '>''=' FLOAT
+          |ID '<''=' FLOAT
+          ;
 
 %%
 void showError () {
@@ -105,12 +123,11 @@ void showError () {
 }
 
 void yyerror (char *s) {
-    if(correct){
+    if(correct == 0){
         printf("Incorrecto\n\n");
-        correct = false;
+        correct = 1;
     };
-    /*printf("%s \n", s);*/
-    /*printf("Error en linea %d\n", yylineno);*/
+    printf("%s \n", s);
 } 
 
 int main(int argc, char **argv){
@@ -120,7 +137,7 @@ int main(int argc, char **argv){
     yyout = fopen(argv[3], "w");
     yyparse();
 
-    if(Correcto){
+    if(correct == 0){
         printf("Correcto\n");
     };
 

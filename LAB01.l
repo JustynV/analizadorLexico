@@ -1,6 +1,9 @@
 %{
 #include <stdio.h>
-#include "LAB02.tab.h"
+#include "y.tab.h"
+int yylex();
+void yyerror (char *s);
+
 %}
 
 %option yylineno 
@@ -9,8 +12,9 @@
 
 "CREATE"            {return(CREATE);}
 "DROP"              {return(DROP);}
-"TABLE"             {return(TABLE);}
-"INSERT INTO"       {return(INSERT);}
+"TABLE"|"Table"|"table"             {return(TABLE);}
+"INSERT"            {return(INSERT);}
+"INTO"              {return(INTO);}
 "DELETE"            {return(DELETE);}
 "UPDATE"            {return(UPDATE);}
 "SELECT"            {return(SELECT);}
@@ -19,7 +23,6 @@
 "VALUES"            {return(VALUES);}
 "SET"               {return(SET);}
 
-" "                 {return(ESP);}
 
 "MAX"               {return(MAX);}
 "MIN"               {return(MIN);}
@@ -28,6 +31,10 @@
 "AND"               {return(AND);}
 "OR"                {return(OR);}
 
+"GROUP BY"          {return(GROUPBY);}                         
+"ORDER BY"          {return(ORDERBY);}                      
+"ASC"               {return ASC;}
+"DESC"              {return DESC;}
 
 "VARCHAR"           {return(VARCHAR);}
 "INTEGER"           {return(INTEGER);}
@@ -35,16 +42,20 @@
 
 
 
-[a-zA-ZáéíóúÁÉÍÓÚÑüÜ][a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]* {return(ID);}
+[a-zA-Z][a-zA-Z0-9]* {return(ID);}
 [0-9]+              {return(ENTERO); }
 [0-9]+\.[0-9]+      {return(FLOAT); }
-\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {return(CADENA);}
-\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {return(CADENA);}
+\'[a-zA-Z0-9]+\'          {return(CADENA);}
+\"[a-zA-Z0-9]+\"          {return(CADENA);}
 
 
-[=()<>*;,'"] { return *yytext; }
+[;]     {return (END);}
+[=()<>*,'"] { return *yytext; }
 
-[\n]+      {yylineno++;} 
-[ \t\r]+    {}
+[\n]+      ;
+[ \t\r]+    ;
 ['.']+      {return OTHER;}
 %%
+int yywrap(void){
+    return 1;
+}

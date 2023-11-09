@@ -1,0 +1,24 @@
+Incorrecto
+
+syntax error, unexpected ID 
+Error en la línea 1
+Error en la línea 3
+syntax error, unexpected ENTERO, expecting ID 
+Error en la línea 6
+syntax error, unexpected '(', expecting ID 
+Error en la línea 12
+syntax error, unexpected ENTERO, expecting ID 
+Error en la línea 15
+syntax error, unexpected ID 
+Error en la línea 20
+syntax error, unexpected ID, expecting ')' 
+Error en la línea 21
+Error en la línea 22
+syntax error, unexpected '(', expecting VALUES 
+Error en la línea 26
+syntax error, unexpected ')', expecting ID 
+Error en la línea 38
+syntax error, unexpected ')', expecting ID 
+Error en la línea 39
+syntax error, unexpected ')', expecting ID 
+Error en la línea 40
