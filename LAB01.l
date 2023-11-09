@@ -1,58 +1,50 @@
 %{
 #include <stdio.h>
 #include "LAB02.tab.h"
-void showError();
-char *error_token = NULL;
 %}
 
-%option case-insensitive 
-%option noyywrap
 %option yylineno 
 
 %%
 
-"CREATE"            {yylval.reserved = yytext; return(CREATE);}
-"DROP"              {yylval.reserved = yytext; return(DROP);}
-"TABLE"             {yylval.reserved = yytext; return(TABLE);}
-"INSERT INTO"       {yylval.reserved = yytext; return(INSERT);}
-"DELETE"            {yylval.reserved = yytext; return(DELETE);}
-"UPDATE"            {yylval.reserved = yytext; return(UPDATE);}
-"SELECT"            {yylval.reserved = yytext; return(SELECT);}
-"FROM"              {yylval.reserved = yytext; return(FROM);}
-"WHERE"             {yylval.reserved = yytext; return(WHERE);}
-"VALUES"            {yylval.reserved = yytext; return(VALUES);}
-"SET"               {yylval.reserved = yytext; return(SET);}
+"CREATE"            {return(CREATE);}
+"DROP"              {return(DROP);}
+"TABLE"             {return(TABLE);}
+"INSERT INTO"       {return(INSERT);}
+"DELETE"            {return(DELETE);}
+"UPDATE"            {return(UPDATE);}
+"SELECT"            {return(SELECT);}
+"FROM"              {return(FROM);}
+"WHERE"             {return(WHERE);}
+"VALUES"            {return(VALUES);}
+"SET"               {return(SET);}
 
-" "                 {yylval.reserved = yytext; return(ESP);}
+" "                 {return(ESP);}
 
-"MAX"               {yylval.reserved = yytext; return(MAX);}
-"MIN"               {yylval.reserved = yytext; return(MIN);}
-"AVG"               {yylval.reserved = yytext; return(AVG);}
-"COUNT"             {yylval.reserved = yytext; return(COUNT);}
-"AND"               {yylval.reserved = yytext; return(AND);}
-"OR"                {yylval.reserved = yytext; return(OR);}
-
-
-"VARCHAR"           {yylval.reserved = yytext; return(VARCHAR);}
-"INTEGER"           {yylval.reserved = yytext; return(INTEGER);}
-"DECIMAL"           {yylval.reserved = yytext; return(DECIMAL);}
+"MAX"               {return(MAX);}
+"MIN"               {return(MIN);}
+"AVG"               {return(AVG);}
+"COUNT"             {return(COUNT);}
+"AND"               {return(AND);}
+"OR"                {return(OR);}
 
 
+"VARCHAR"           {return(VARCHAR);}
+"INTEGER"           {return(INTEGER);}
+"DECIMAL"           {return(DECIMAL);}
 
-[a-zA-ZáéíóúÁÉÍÓÚÑüÜ][a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]* {yylval.reserved = yytext; return(ID);}
-[0-9]+              {yylval.number = atoi(yytext); return(ENTERO); }
-[0-9]+\.[0-9]+      {yylval.number = atoi(yytext); return(FLOAT); }
-\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {yylval.reserved = yytext; return(CADENA);}
-\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {yylval.reserved = yytext; return(CADENA);}
+
+
+[a-zA-ZáéíóúÁÉÍÓÚÑüÜ][a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]* {return(ID);}
+[0-9]+              {return(ENTERO); }
+[0-9]+\.[0-9]+      {return(FLOAT); }
+\'[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\'          {return(CADENA);}
+\"[a-zA-Z0-9áéíóúÁÉÍÓÚÑüÜ]+\"          {return(CADENA);}
 
 
 [=()<>*;,'"] { return *yytext; }
 
 [\n]+      {yylineno++;} 
 [ \t\r]+    {}
-['.']+      {showError(); return OTHER;}
+['.']+      {return OTHER;}
 %%
-
-void showError(char *c){
-    printf("Error léxico %s en la linea %i", c, yylineno);
-}
