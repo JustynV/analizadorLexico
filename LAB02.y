@@ -1,10 +1,17 @@
 %{
-#include <stdio.h>
-int yylex();
-int yyerror(char *s);
-extern int yylineno;
+    #include <stdio.h>
+    #include <string.h>
+
+    int yylex();
+    extern int yylineno;
+    void yyerror (char *s);
+    void showError (char *s);
+    bool correct = true;
 %}
  
+
+ %define parse.error verbose
+
 %token CREATE DROP TABLE
 
 %token INSERT DELETE UPDATE
@@ -19,12 +26,7 @@ extern int yylineno;
 
 %token MAX MIN AVG COUNT
 
-
-%union{
-int number;
-char id;
-char *reserved;
-}
+%start CODE
 
 %%
 
@@ -47,7 +49,7 @@ CRUD:
      |SELECT ESP IDS ESP FROM ESP ID ESP GROUP ESP BY ESP ID 
      |SELECT ESP IDS ESP FROM ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS 
      |SELECT ESP IDS FROM ESP ID ESP WHERE ESP CONDITIONS ESP GROUP ESP BY ESP ID ESP ORDER ESP BY ESP IDS ESP ORDERS {printf("SELECT VALIDO");}
-     |error_state ';'
+     |error_state ';' {showError();}
 
 ORDERS:ASC
       |DESC
@@ -96,15 +98,32 @@ CONDITION: ID '=' CADENA
           |ID '>''=' DECIMAL
           |ID '<''=' DECIMAL
 
-error_state: error{}
 
 %%
-
-int yyerror(char *s) {
+void showError () {
     printf("Error en la línea %d\n", yylineno);
 }
 
-int main(){
+void yyerror (char *s) {
+    if(correct){
+        printf("Incorrecto\n\n");
+        correct = false;
+    };
+    /*printf("%s \n", s);*/
+    /*printf("Error en linea %d\n", yylineno);*/
+} 
+
+int main(int argc, char **argv){
+    extern FILE *yyin, *yyout;
+
+    yyin = fopen(argv[1], "r");
+    yyout = fopen(argv[3], "w");
     yyparse();
+
+    if(Correcto){
+        printf("Correcto\n");
+    };
+
     return 0;
-}
+};
+
