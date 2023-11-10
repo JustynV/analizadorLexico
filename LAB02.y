@@ -99,7 +99,7 @@ CONDITIONS:CONDITION
            |OR CONDITION  CONDITIONS
            ;
 
-CONDITION: ID '=''=' CADENA
+CONDITION: ID '=' CADENA
           |ID '<''>' CADENA
           |ID '=' ENTERO
           |ID '<''>'  ENTERO
@@ -107,7 +107,7 @@ CONDITION: ID '=''=' CADENA
           |ID '<' ENTERO
           |ID '>''=' ENTERO
           |ID '<''=' ENTERO
-          |ID '=''='  FLOAT
+          |ID '='  FLOAT
           |ID '<''>'  FLOAT
           |ID '>' FLOAT
           |ID '<' FLOAT
