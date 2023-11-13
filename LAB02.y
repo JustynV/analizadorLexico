@@ -41,8 +41,8 @@ CRUD:
      |DELETE FROM ID WHERE CONDITIONS END
      |UPDATE ID  SET ID '=' VAL WHERE CONDITIONS END
 
-     |SELECT MIX FROM ID GROUPING END
-     |SELECT MIX FROM ID WHERE CONDITIONS GROUPING END
+     |SELECT MIX|'*' FROM ID GROUPING END
+     |SELECT MIX|'*' FROM ID WHERE CONDITIONS GROUPING END
      |error END {showError();}
      ;
 
@@ -69,7 +69,6 @@ VALS:VAL
 
 IDS: ID
     |ID ',' IDS
-    |'*'
     ;
 
 ARGS: ARG
@@ -99,7 +98,7 @@ CONDITIONS:CONDITION
            |OR CONDITION  CONDITIONS
            ;
 
-CONDITION: ID '=''=' CADENA
+CONDITION: ID '=' CADENA
           |ID '<''>' CADENA
           |ID '=' ENTERO
           |ID '<''>'  ENTERO
@@ -107,7 +106,7 @@ CONDITION: ID '=''=' CADENA
           |ID '<' ENTERO
           |ID '>''=' ENTERO
           |ID '<''=' ENTERO
-          |ID '=''='  FLOAT
+          |ID '='  FLOAT
           |ID '<''>'  FLOAT
           |ID '>' FLOAT
           |ID '<' FLOAT
