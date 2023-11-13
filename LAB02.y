@@ -9,7 +9,7 @@
     int correct = 0;
 %}
  
-
+%define parse.error verbose
 
 %token CREATE DROP TABLE
 
@@ -89,10 +89,10 @@ FUNCTION:MAX '('ID')'
         |COUNT '('ID')'
         ;
 
-MIX: FUNCTION ',' MIX
-    |IDS ',' MIX
-    |IDS
+MIX: ID
     |FUNCTION
+    |ID ',' MIX
+    |FUNCTION ',' MIX
 
 CONDITIONS:CONDITION
            |AND CONDITION  CONDITIONS
@@ -125,6 +125,7 @@ void yyerror (char *s) {
         printf("Incorrecto\n\n");
         correct = 1;
     };
+    printf("%s \n", s);
 } 
 
 int main(int argc, char **argv){

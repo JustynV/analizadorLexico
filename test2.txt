@@ -1,5 +1,4 @@
-CREATE Table Empleado(nombre VARCHAR(20), cedula INTEGER, salario
-DECIMAL(2));
+CREATE Table Empleado(nombre VARCHAR(20), cedula INTEGER, salario DECIMAL(2));
 INSERT INTO Empleado VALUES('Juan',1045268154, 12aab);
 SELECT FROM a;
 SELECT nombre, MAX(salario) FROM Empleado;
